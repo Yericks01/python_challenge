@@ -46,16 +46,16 @@ def get_news(limit_date: str, phrase: str) -> list:
     limit_date = str(limit_date)
     match limit_date:
         case "1" | "0":
-            limit_date = current_date
+            limit_date = current_date.replace(day=1)
             print(f"Checking current month: {limit_date.strftime('%B %Y')}")
         case "2":
             limit_date = current_date - timedelta(days=current_date.day)
-            limit_date = current_date - timedelta(days=current_date.day)
+            limit_date = limit_date.replace(day=1)
             print(f"Checking past month: {limit_date.strftime('%B %Y')}")
         case "3":
-            first_day_of_current_month = current_date.replace(day=1)
-            limit_date = first_day_of_current_month - timedelta(days=1)
+            limit_date = limit_date - timedelta(days=1)
             previous_month_before = limit_date.replace(day=1)
+            limit_date = previous_month_before
             print(f"Checking the month before the past month: {previous_month_before.strftime('%B %Y')}")
         case _:
             raise ValueError("Invalid limit date. Please choose from 1-3.")
@@ -63,7 +63,7 @@ def get_news(limit_date: str, phrase: str) -> list:
     excel = Files()
     # Set browser configuration
     browser = Selenium(auto_close=True)
-    browser.set_selenium_timeout(10)
+    browser.set_selenium_timeout(30)
     browser.set_download_directory(SAVE_FOLDER)
     browser.open_browser(f"https://www.latimes.com/search?q={phrase}", browser="edge")
     # articles to be stored
@@ -139,7 +139,7 @@ def get_news(limit_date: str, phrase: str) -> list:
         excel.save_workbook(excel_path)
         excel.close_workbook()
         print("Ending simple web scraping.")
-        time.sleep(10)
+        time.sleep(20)
 
     return articles
 
