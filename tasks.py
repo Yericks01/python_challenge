@@ -41,20 +41,24 @@ def get_news(limit_date: str, phrase: str) -> list:
     # Verifies if limit date is valid
     # Number based format
     # 0 | 1 would get current month, 2 would get previous and current
-    # 3 would get data from 2 previous months and current month. 
-    if limit_date in {"1", "0"}:
-        limit_date = current_date
-        print(f"Checking current month: {limit_date.strftime('%B %Y')}")
-    elif limit_date == "2":
-        limit_date = current_date - timedelta(days=current_date.day)
-        print(f"Checking past month: {limit_date.strftime('%B %Y')}")
-    elif limit_date == "3":
-        first_day_of_current_month = current_date.replace(day=1)
-        limit_date = first_day_of_current_month - timedelta(days=1)
-        previous_month_before = limit_date.replace(day=1)
-        print(f"Checking the month before the past month: {previous_month_before.strftime('%B %Y')}")
-    else:
-        raise ValueError("Invalid limit date. Please choose from 1-3.")
+    # 3 would get data from 2 previous months and current month.
+    # Ensure limit_date is treated as a string
+    limit_date = str(limit_date)
+    match limit_date:
+        case "1" | "0":
+            limit_date = current_date
+            print(f"Checking current month: {limit_date.strftime('%B %Y')}")
+        case "2":
+            limit_date = current_date - timedelta(days=current_date.day)
+            limit_date = current_date - timedelta(days=current_date.day)
+            print(f"Checking past month: {limit_date.strftime('%B %Y')}")
+        case "3":
+            first_day_of_current_month = current_date.replace(day=1)
+            limit_date = first_day_of_current_month - timedelta(days=1)
+            previous_month_before = limit_date.replace(day=1)
+            print(f"Checking the month before the past month: {previous_month_before.strftime('%B %Y')}")
+        case _:
+            raise ValueError("Invalid limit date. Please choose from 1-3.")
     # Prepare output file
     excel = Files()
     # Set browser configuration
