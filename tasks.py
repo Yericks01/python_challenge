@@ -35,7 +35,7 @@ def download_image(image_url: str) -> str:
     
     return image_path
 # function designed to process the whole transaction
-def get_news(limit_date: str, phrase: str) -> list:
+def get_news(limit_date: str, phrase: str, topic: str) -> list:
     """Scrape news articles and store them in an Excel file."""
     current_date = datetime.now()
     # Verifies if limit date is valid
@@ -44,6 +44,7 @@ def get_news(limit_date: str, phrase: str) -> list:
     # 3 would get data from 2 previous months and current month.
     # Ensure limit_date is treated as a string
     limit_date = str(limit_date)
+    print("Topic - " + topic)
     match limit_date:
         case "1" | "0":
             limit_date = current_date.replace(day=1)
@@ -149,7 +150,7 @@ def producer() -> None:
         print("Testing my own item")
         print(item)
         try:
-            articles = get_news(item.payload["limit_date"], item.payload["phrase"])
+            articles = get_news(item.payload["limit_date"], item.payload["phrase"], item.payload["topic"])
             for article in articles:
                 print("********************************")
                 print(article)
